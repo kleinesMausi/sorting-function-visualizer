@@ -5,7 +5,7 @@ import time
 
 def bubble_sort(inform: bool, 
                 delay: float = 0.01, 
-                data: list|None = None, 
+                data: list[float] | None = None, 
                 print_func = print
                 ) -> list[float]:
     
@@ -39,7 +39,7 @@ def bubble_sort(inform: bool,
 def main() -> None:
     args = parse_args()
     bounds = (args.lower, args.upper)
-    data = get_data(amount_data_points=args.number, precision=args.precision)
+    data = get_data(amount_data_points=args.number, bounds=bounds, precision=args.precision)
     bubble_sort(args.information, args.delay, data, render)
 
 

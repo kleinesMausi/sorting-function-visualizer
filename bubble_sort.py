@@ -11,7 +11,7 @@ def bubble_sort(inform: bool,
     
     if data is None:
         data = []
-
+    unsorted = data.copy()
     total_swaps = 0
     for i in range(len(data)):
         swapped = False
@@ -20,17 +20,26 @@ def bubble_sort(inform: bool,
                 total_swaps += 1
                 data[j], data[j + 1] = data[j + 1], data[j]
                 swapped = True
-                
+
+                if inform:
+                    relations = get_order(data, (j, j + 1))
+                else:
+                    relations = []
                 clearscreen()
-                print_func(data, information=(inform, get_order(data), total_swaps))
+                print_func(data, 
+                           data_tuple=(unsorted, data),
+                           information=(inform, relations, total_swaps))
                 time.sleep(delay)
 
         if not swapped:
             break
 
+    return data
+
 def main() -> None:
     args = parse_args()
-    data = get_data(amount_data_points=args.number)
+    bounds = (args.lower, args.upper)
+    data = get_data(amount_data_points=args.number, precision=args.precision)
     bubble_sort(args.information, args.delay, data, render)
 
 

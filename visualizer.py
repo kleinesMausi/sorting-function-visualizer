@@ -1,3 +1,5 @@
+from util import get_color, make_interface
+
 def initialize_empty_data_grid(data: list[float]) -> list[list[bool]]:
     max_element = max(data)
     return [[False for _ in data] for _ in range(round(max_element))]
@@ -17,38 +19,40 @@ def transform_data_to_grid(data: list[float]) -> list[list[bool]]:
 
 
 def print_data(grid: list[list[bool]], 
+               data_tuple: tuple[list[float] | None, list[float] | None] = (None, None),
                data_representation_char:str = "█", 
                information: tuple[bool, list, int] = (False, [], 0)
                ) -> None:
-    
-    red = "\033[91m"
-    green = "\033[92m"
-    reset = "\033[0m"
+    interface = ""
 
     should_give_info, element_relations, total_swaps = information
     
     for row in grid:
         for pixel_idx, pixel in enumerate(row):
             if pixel:
-                if should_give_info and element_relations and pixel_idx <= len(element_relations):
-                    color = green if element_relations[max(0, pixel_idx - 1)] else red
-                    print(f"{color}{data_representation_char}{reset}", end="")
+                if should_give_info and pixel_idx <= len(element_relations):
+                    color_code = element_relations[max(0, pixel_idx - 1)]
+                    interface += f"{get_color(color_code)}{data_representation_char}{get_color(None)}"
                 else:
-                    print(data_representation_char, end="")
+                    interface += data_representation_char
             else:
-                print(" ", end="")
-        print()
+                interface += " "
+        interface += "\n"
 
     if should_give_info:
-        print(f"[total swaps: {total_swaps}]")
+        interface = make_interface(interface, data_tuple, total_swaps)
 
+    print(interface)
 
 def render(data: list[float], 
+           data_tuple: tuple[list[float] | None, list[float] | None] = (None, None),
            information: tuple[bool, 
            list[bool], int] = (False, [], 0)
            ) -> None:
     
-    print_data(transform_data_to_grid(data), information=information)
+    print_data(transform_data_to_grid(data), 
+               data_tuple=data_tuple,
+               information=information)
 
 
 if __name__ == "__main__":
